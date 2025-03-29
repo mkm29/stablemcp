@@ -38,20 +38,32 @@ func (c *Config) IsDebug() bool {
 }
 
 // LoadConfig loads the configuration from a file.
-func LoadConfig(v *viper.Viper, fp string) (*Config, error) {
-	v.AddConfigPath(fp)
+func LoadConfig(v *viper.Viper) (*Config, error) {
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
+	
+	// Search for config in multiple locations (in order of priority)
+	v.AddConfigPath("./configs")
+	v.AddConfigPath("$HOME/.config/stablemcp")
+	v.AddConfigPath("/etc/stablemcp")
+	
+	// Set default values
 	v.SetDefault("server_port", 8080)
 	v.SetDefault("log_level", "info")
 	v.SetDefault("timeout", "30s")
 	v.SetDefault("enable_debug_mode", false)
 	v.SetDefault("enable_metrics", false)
 	v.SetDefault("enable_tracing", false)
-	v.SetConfigFile(fp)
+
+	// Check if config file is specified via flag (highest priority)
+	if configFile := v.GetString("config"); configFile != "" {
+		v.SetConfigFile(configFile)
+	}
+
 	if err := v.ReadInConfig(); err != nil {
 		return nil, err
 	}
+	
 	// Unmarshal the config into the Config struct
 	// This will automatically handle the conversion from JSON/YAML to the struct fields
 	var config Config

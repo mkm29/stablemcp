@@ -21,6 +21,12 @@ func NewServerCmd() *cobra.Command {
 		Short: "Start the stablemcp server",
 		Long:  `Start the stablemcp server with the specified configuration.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// Bind the config flag to viper
+			configPath, _ := cmd.Flags().GetString("config")
+			if configPath != "" {
+				v.Set("config", configPath)
+			}
+
 			if cfg == nil {
 				c, err := initializeConfig(cmd)
 				if err != nil {
@@ -32,7 +38,7 @@ func NewServerCmd() *cobra.Command {
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			if cfg.EnableDebugMode {
-				log.Println("Running sigpilot Server")
+				log.Println("Running stablemcp Server")
 			}
 			runServer()
 		},
@@ -56,6 +62,10 @@ func runServer() error {
 func initializeConfig(cmd *cobra.Command) (*config.Config, error) {
 	// Initialize config
 	v = viper.New()
+	
+	// Bind all flags to viper
+	bindFlags(cmd, v)
+	
 	c, err := config.LoadConfig(v)
 	if err != nil {
 		return nil, err
@@ -64,8 +74,6 @@ func initializeConfig(cmd *cobra.Command) (*config.Config, error) {
 	if c.EnableDebugMode {
 		log.Printf("Config: %+v\n", cfg)
 	}
-
-	bindFlags(cmd, v)
 
 	return c, nil
 }
