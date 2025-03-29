@@ -20,12 +20,14 @@ A Model Context Protocol (MCP) server for generating images using Stable Diffusi
 
 ## Features
 
+- JSON-RPC 2.0 based Model Context Protocol (MCP) implementation
 - MCP-compliant API endpoint for image generation
 - Integration with Stable Diffusion image generation models
 - Support for various image parameters (size, style, prompt)
 - API key authentication (optional)
 - Configurable image size and quality settings
 - Rate limiting and request validation
+- Extensible capabilities system for adding new tools
 
 ## Project Structure
 
@@ -39,11 +41,13 @@ A Model Context Protocol (MCP) server for generating images using Stable Diffusi
 ├── internal      # Private application code
 │   ├── config    # Configuration handling
 │   ├── models    # Data models
-│   └── utils     # Utility functions
+│   └── helpers   # Helper functions
 ├── pkg           # Public packages
 │   ├── auth      # Authentication/authorization
 │   ├── handlers  # Request handlers
 │   ├── mcp       # MCP protocol implementation
+│   │   ├── server.go   # Server implementation
+│   │   └── types.go    # Protocol type definitions
 │   └── stablediffusion # Stable Diffusion client
 └── scripts       # Utility scripts
 ```
@@ -161,6 +165,29 @@ touch ~/.config/.stablemcp.yaml
 sudo touch /etc/.stablemcp.yaml
 ```
 
+## MCP Implementation
+
+StableMCP implements the [Model Context Protocol](https://github.com/llm-protocol/model-context-protocol) (MCP), a standard JSON-RPC 2.0 based protocol for LLM-based tools and services. The implementation consists of:
+
+### Core Components
+
+- **JSONRPCRequest/Response**: Standard JSON-RPC 2.0 request and response structures
+- **MCPServer**: Server implementation with name, version, and capabilities
+- **Capabilities**: Extensible system for registering tools the server supports
+
+### Server Initialization
+
+```go
+// Create a new MCP server
+server := mcp.NewMCPServer("StableMCP", "0.1.1")
+
+// Register capabilities/tools
+server.Capabilities.Tools["stable-diffusion"] = map[string]interface{}{
+    "version": "1.0",
+    "models": []string{"sd-turbo", "sdxl"},
+}
+```
+
 ## API Usage
 
 ### Generate an Image
@@ -173,6 +200,19 @@ curl -X POST http://localhost:8080/v1/generate \
     "width": 512,
     "height": 512,
     "num_inference_steps": 50
+  }'
+```
+
+### MCP Initialize Request
+
+```bash
+curl -X POST http://localhost:8080/mcp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "initialize",
+    "params": {}
   }'
 ```
 
