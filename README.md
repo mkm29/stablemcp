@@ -4,6 +4,20 @@
 
 A Model Context Protocol (MCP) server for generating images using Stable Diffusion.
 
+- [StableMCP](#stablemcp)
+  - [Features](#features)
+  - [Project Structure](#project-structure)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+  - [Configuration](#configuration)
+    - [Configuration Options](#configuration-options)
+    - [Using a Custom Configuration File](#using-a-custom-configuration-file)
+  - [API Usage](#api-usage)
+    - [Generate an Image](#generate-an-image)
+  - [Development](#development)
+  - [License](#license)
+
+
 ## Features
 
 - MCP-compliant API endpoint for image generation
