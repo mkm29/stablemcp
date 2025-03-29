@@ -45,23 +45,36 @@ git clone https://github.com/yourusername/stablemcp.git
 cd stablemcp
 
 # Build the server
-go build -o bin/stablemcp cmd/server.go
+go build -o bin/stablemcp ./main.go
 
 # Run with default config
-./bin/stablemcp
+./bin/stablemcp server
 
 # Run with a custom config
-./bin/stablemcp --config configs/custom.yaml
+./bin/stablemcp server -c configs/custom.yaml
 ```
 
 ## Configuration
 
-Edit `configs/default.yaml` to configure:
+The application looks for configuration files in the following locations (in order of priority):
+
+1. Custom path specified with `-c` flag
+2. `./configs/config.yaml` (in the current directory)
+3. `$HOME/.config/stablemcp/config.yaml` (in the user's home directory)
+4. `/etc/stablemcp/config.yaml` (system-wide)
+
+In the configuration file, you can set:
 
 - Server host and port
 - Stable Diffusion API endpoint
 - Authentication settings
 - Logging options
+
+You can specify a custom configuration file when running the server:
+
+```bash
+./bin/stablemcp server -c path/to/your/config.yaml
+```
 
 ## API Usage
 
