@@ -90,13 +90,13 @@ func NewConfig() *Config {
 
 // LoadConfig loads the configuration from a file.
 func LoadConfig(v *viper.Viper) (*Config, error) {
-	v.SetConfigName("config")
-	v.SetConfigType("yaml")
+	v.SetConfigName(".stablemcp")
+	v.SetConfigType("yaml") // Default type, will be overridden if .stablemcp.json is found
 
 	// Search for config in multiple locations (in order of priority)
 	v.AddConfigPath("./configs")
-	v.AddConfigPath("$HOME/.config/stablemcp")
-	v.AddConfigPath("/etc/stablemcp")
+	v.AddConfigPath("$HOME/.config")
+	v.AddConfigPath("/etc")
 
 	// Set default values to match NewConfig()
 	// Server defaults

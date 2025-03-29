@@ -44,6 +44,22 @@ A Model Context Protocol (MCP) server for generating images using Stable Diffusi
 git clone https://github.com/yourusername/stablemcp.git
 cd stablemcp
 
+# Create a default configuration file
+make config
+
+# Build the server
+make build
+
+# Run with default config
+make run
+
+# Run with a custom config
+make run-config
+```
+
+Alternatively, you can use Go commands directly:
+
+```bash
 # Build the server
 go build -o bin/stablemcp ./main.go
 
@@ -51,7 +67,7 @@ go build -o bin/stablemcp ./main.go
 ./bin/stablemcp server
 
 # Run with a custom config
-./bin/stablemcp server --config configs/custom.yaml
+./bin/stablemcp server --config configs/.stablemcp.yaml
 ```
 
 ## Configuration
@@ -59,10 +75,10 @@ go build -o bin/stablemcp ./main.go
 The application uses [Viper](https://github.com/spf13/viper) for configuration management. Configuration values can be provided via:
 
 1. Custom config file specified with the `--config` flag (highest priority)
-2. Configuration files in standard locations (checked in this order):
-   - `./configs/config.yaml` (in the current directory)
-   - `$HOME/.config/stablemcp/config.yaml` (in the user's home directory)
-   - `/etc/stablemcp/config.yaml` (system-wide)
+2. Configuration files named `.stablemcp.yaml` or `.stablemcp.json` in standard locations (checked in this order):
+   - `./configs/.stablemcp.yaml` (in the current directory)
+   - `$HOME/.config/.stablemcp.yaml` (in the user's home directory)
+   - `/etc/.stablemcp.yaml` (system-wide)
 3. Default values (lowest priority)
 
 ### Configuration Options
@@ -116,6 +132,19 @@ You can specify a custom configuration file when running the server:
 ./bin/stablemcp server --config path/to/your/config.yaml
 ```
 
+Or create one of these standard configuration files:
+
+```bash
+# In your project directory
+touch configs/.stablemcp.yaml
+
+# In your home directory
+touch ~/.config/.stablemcp.yaml
+
+# System-wide (requires sudo)
+sudo touch /etc/.stablemcp.yaml
+```
+
 ## API Usage
 
 ### Generate an Image
@@ -132,6 +161,30 @@ curl -X POST http://localhost:8080/v1/generate \
 ```
 
 ## Development
+
+The project includes a Makefile with common development tasks:
+
+```bash
+# Run all tests
+make test
+
+# Run a specific test
+make test-one TEST=TestConfigLoading
+
+# Format code
+make fmt
+
+# Run linter
+make lint
+
+# Clean build artifacts
+make clean
+
+# See all available commands
+make help
+```
+
+Alternatively, you can use Go commands directly:
 
 ```bash
 # Run tests
