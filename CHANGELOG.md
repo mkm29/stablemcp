@@ -8,16 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2025-03-29
 
 ### Added
-- Initial project structure with Docker support
-- Model Context Protocol (MCP) server implementation
-- Configuration system with Viper
-- Stable Diffusion client integration
-- Server command with configuration loading
-- Logging configuration with level and format options
-- Telemetry support (metrics and tracing)
-- TLS configuration options
-- OpenAI configuration support
+- Comprehensive configuration system with proper defaults
+- OpenAI integration with configurable API key, model, and base URL
+- Structured logging with configurable level and format
+- Telemetry support for metrics and distributed tracing
+- TLS configuration options for secure server connections
 - Download path option for storing generated images
+
+### Changed
+- Refactored configuration loading to use deterministic file paths
+- Updated configuration to use `.stablemcp.yaml` or `.stablemcp.json` files
+- Improved configurability with nested configuration options
+- Enhanced default configuration values for better out-of-box experience
+
+### Fixed
+- Fixed configuration loading to properly handle default values
+- Addressed potential issues with configuration file search paths
 
 ## [0.1.0] - 2025-03-28
 
@@ -27,5 +33,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration loading from multiple locations
 - Preliminary Model Context Protocol support
 
-[0.1.1]: https://github.com/mkm29/stablemcp/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/mkm29/stablemcp/releases/tag/v0.1.0...HEAD
+[0.1.1]: https://github.com/modelcontextprotocol/stablemcp/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/modelcontextprotocol/stablemcp/releases/tag/v0.1.0

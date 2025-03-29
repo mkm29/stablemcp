@@ -59,10 +59,10 @@ go build -o bin/stablemcp ./main.go
 The application uses [Viper](https://github.com/spf13/viper) for configuration management. Configuration values can be provided via:
 
 1. Custom config file specified with the `--config` flag (highest priority)
-2. Configuration files in standard locations (checked in this order):
-   - `./configs/config.yaml` (in the current directory)
-   - `$HOME/.config/stablemcp/config.yaml` (in the user's home directory)
-   - `/etc/stablemcp/config.yaml` (system-wide)
+2. Configuration files named `.stablemcp.yaml` or `.stablemcp.json` in standard locations (checked in this order):
+   - `./configs/.stablemcp.yaml` (in the current directory)
+   - `$HOME/.config/.stablemcp.yaml` (in the user's home directory)
+   - `/etc/.stablemcp.yaml` (system-wide)
 3. Default values (lowest priority)
 
 ### Configuration Options
@@ -114,6 +114,19 @@ You can specify a custom configuration file when running the server:
 
 ```bash
 ./bin/stablemcp server --config path/to/your/config.yaml
+```
+
+Or create one of these standard configuration files:
+
+```bash
+# In your project directory
+touch configs/.stablemcp.yaml
+
+# In your home directory
+touch ~/.config/.stablemcp.yaml
+
+# System-wide (requires sudo)
+sudo touch /etc/.stablemcp.yaml
 ```
 
 ## API Usage

@@ -37,7 +37,7 @@ func NewServerCmd() *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			if cfg.EnableDebugMode {
+			if cfg.Debug {
 				log.Println("Running stablemcp Server")
 			}
 			runServer()
@@ -62,16 +62,16 @@ func runServer() error {
 func initializeConfig(cmd *cobra.Command) (*config.Config, error) {
 	// Initialize config
 	v = viper.New()
-	
+
 	// Bind all flags to viper
 	bindFlags(cmd, v)
-	
+
 	c, err := config.LoadConfig(v)
 	if err != nil {
 		return nil, err
 	}
 	cfg = c
-	if c.EnableDebugMode {
+	if c.Debug {
 		log.Printf("Config: %+v\n", cfg)
 	}
 
