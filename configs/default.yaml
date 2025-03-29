@@ -1,0 +1,25 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
+
+mcp:
+  version: 0.1.0
+  allowed_origins: ["*"]
+
+stablediffusion:
+  backend_url: "http://localhost:7860"  # Adjust to your Stable Diffusion backend
+  timeout: 60s
+  max_image_size: 1024  # Maximum dimension in pixels
+
+auth:
+  enabled: false
+  # Uncomment to enable API key authentication
+  # api_keys:
+  #   - key: "your-api-key-here"
+  #     name: "development"
+
+logging:
+  level: info  # debug, info, warn, error
+  format: json  # text, json
