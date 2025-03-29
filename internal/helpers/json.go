@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func PrettyJSON(req map[string]interface{}) string {
+func PrettyJSON(req any) string {
 	jsonStr, err := json.MarshalIndent(req, "", "  ")
 	if err != nil {
 		return fmt.Sprintf("Error: %v", err)

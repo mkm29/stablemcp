@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/mkm29/stablemcp/internal/helpers"
 )
 
 type MCPServer struct {
@@ -64,4 +66,65 @@ func (s *MCPServer) Initialize(logOutput string) error {
 		"version": "1.0",
 	}
 	return nil
+}
+
+// HandleRequest handles incoming JSON-RPC requests
+func (s *MCPServer) handleRequest() {
+	// Read the request from the decoder
+	var req JSONRPCRequest
+	if err := s.Decoder.Decode(&req); err != nil {
+		log.Println("Error decoding request:", err)
+		return
+	}
+
+	// Log the request
+	log.Println("Received request:", helpers.PrettyJSON(req))
+
+	// Handle the request based on the method
+	if req.JSONRPC != "2.0" {
+		log.Println("Invalid JSON-RPC version")
+		return
+	}
+
+	var res any
+	var sendResponse bool
+	switch req.Method {
+	case "initialize":
+		sendResponse = true
+		res = JSONRPCResponse{
+			JSONRPC: "2.0",
+			ID:      req.ID,
+			Result: InitializeResult{
+				ProtocolVersion: "1.0",
+				ServerInfo: ServerInfo{
+					Name:    s.Name,
+					Version: s.Version,
+				},
+				Capabilities: s.Capabilities,
+			},
+		}
+	case "notifications/initialize":
+		log.Printf("Server initialized with capabilities: %s\n", helpers.PrettyJSON(s.Capabilities))
+		return
+	default:
+		log.Println("Unknown method:", req.Method)
+		return
+	}
+
+	if sendResponse {
+		// Log the response
+		log.Println("Sending response:", helpers.PrettyJSON(res))
+		// Send the response
+		if err := s.Encoder.Encode(res); err != nil {
+			log.Println("Error encoding response:", err)
+		}
+	}
+}
+
+// Handler function
+func (s *MCPServer) Handle() {
+	// Handle incoming requests
+	for {
+		s.handleRequest()
+	}
 }
