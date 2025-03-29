@@ -34,4 +34,5 @@ Thumbs.db
 tmp/
 .env*
 !.env.example
-CLAUDE.md
+CLAUDE.md# Added by goreleaser init:
+dist/

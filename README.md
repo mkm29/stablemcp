@@ -44,6 +44,22 @@ A Model Context Protocol (MCP) server for generating images using Stable Diffusi
 git clone https://github.com/yourusername/stablemcp.git
 cd stablemcp
 
+# Create a default configuration file
+make config
+
+# Build the server
+make build
+
+# Run with default config
+make run
+
+# Run with a custom config
+make run-config
+```
+
+Alternatively, you can use Go commands directly:
+
+```bash
 # Build the server
 go build -o bin/stablemcp ./main.go
 
@@ -51,7 +67,7 @@ go build -o bin/stablemcp ./main.go
 ./bin/stablemcp server
 
 # Run with a custom config
-./bin/stablemcp server --config configs/custom.yaml
+./bin/stablemcp server --config configs/.stablemcp.yaml
 ```
 
 ## Configuration
@@ -145,6 +161,30 @@ curl -X POST http://localhost:8080/v1/generate \
 ```
 
 ## Development
+
+The project includes a Makefile with common development tasks:
+
+```bash
+# Run all tests
+make test
+
+# Run a specific test
+make test-one TEST=TestConfigLoading
+
+# Format code
+make fmt
+
+# Run linter
+make lint
+
+# Clean build artifacts
+make clean
+
+# See all available commands
+make help
+```
+
+Alternatively, you can use Go commands directly:
 
 ```bash
 # Run tests
