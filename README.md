@@ -1,5 +1,7 @@
 # StableMCP
 
+![StableMCP Logo](./images/logo-transparent.png)
+
 A Model Context Protocol (MCP) server for generating images using Stable Diffusion.
 
 ## Features
