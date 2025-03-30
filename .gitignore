@@ -34,4 +34,4 @@ Thumbs.db
 tmp/
 .env*
 !.env.example
-CLAUDE.md
+dist/

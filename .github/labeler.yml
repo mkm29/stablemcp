@@ -1,0 +1,27 @@
+# Add 'core' label to any change within the core directory
+core:
+  - any: ['pkg/mcp/**/*']
+
+# Add 'config' label to any change within the config directory
+config:
+  - any: ['internal/config/**/*', 'configs/**/*']
+
+# Add 'cli' label to any change to cmd files
+cli:
+  - any: ['cmd/**/*']
+
+# Add 'documentation' label to any change to docs files or README
+documentation:
+  - any: ['**/*.md', 'docs/**/*']
+
+# Add 'github-actions' label to any change to .github/workflows files
+github-actions:
+  - any: ['.github/workflows/**/*']
+
+# Add 'docker' label to any change to Dockerfile or docker-compose.yml
+docker:
+  - any: ['Dockerfile', 'docker-compose.yml']
+
+# Add 'tests' label to any change to test files
+tests:
+  - any: ['**/*_test.go']

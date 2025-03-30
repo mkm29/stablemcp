@@ -1,0 +1,68 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    main: ./main.go
+    ldflags:
+      - -s -w
+      - -X github.com/mkm29/stablemcp/internal/version.Version={{.Version}}
+      - -X github.com/mkm29/stablemcp/internal/version.GitCommit={{.ShortCommit}}
+      - -X github.com/mkm29/stablemcp/internal/version.BuildDate={{.Date}}
+      - -X github.com/mkm29/stablemcp/internal/version.GitBranch={{.Branch}}
+    flags:
+      - -trimpath
+    binary: "stablemcp"
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: stablemcp
+    tap:
+      owner: mkm29
+      name: homebrew-tap
+    folder: Formula
+    homepage: "https://github.com/mkm29/stablemcp"
+    description: "A Model Context Protocol (MCP) server for generating images using Stable Diffusion"
+    license: "MIT"
+    test: |
+      system "#{bin}/stablemcp version"
+    install: |
+      bin.install "stablemcp"
