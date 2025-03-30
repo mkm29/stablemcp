@@ -58,7 +58,9 @@ and supports features like configurable quality settings and authentication.`,
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			// If no subcommand is provided, print help
-			cmd.Help()
+			if err := cmd.Help(); err != nil {
+				log.Printf("Error displaying help: %v", err)
+			}
 		},
 	}
 
