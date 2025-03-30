@@ -4,25 +4,79 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+      timezone: "UTC"
     open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps"
+      include: "scope"
     labels:
       - "dependencies"
+      - "go"
       - "automerge"
+    reviewers:
+      - "mkm29"
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "github.com/stretchr/testify"
+          - "golang.org/x/tools"
+        update-types:
+          - "minor"
+          - "patch"
+      test-dependencies:
+        patterns:
+          - "github.com/stretchr/testify"
+          - "golang.org/x/tools"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
     open-pull-requests-limit: 10
+    commit-message:
+      prefix: "ci"
+      include: "scope"
     labels:
       - "dependencies"
+      - "github-actions"
       - "automerge"
+    reviewers:
+      - "mkm29"
+    groups:
+      github-actions:
+        patterns:
+          - "actions/*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: "docker"
+      include: "scope"
     labels:
       - "dependencies"
+      - "docker"
       - "automerge"
+    reviewers:
+      - "mkm29"
+    ignore:
+      # Ignore major version updates to Docker base images to ensure stability
+      - dependency-name: "golang"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "alpine"
+        update-types: ["version-update:semver-major"]
