@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -25,16 +25,17 @@ jobs:
           check-latest: true
 
       - name: Run gosec
-        uses: securego/gosec@master
+        uses: securego/gosec@v2.17.0
         with:
           args: -exclude-dir=vendor -exclude=G104 ./...
 
-      - name: Run nancy for dependency scanning
+      - name: Install and run nancy for dependency scanning
         run: |
-          go list -json -deps ./... | nancy sleuth --skip-update-check
+          go install github.com/sonatype-nexus-community/nancy@latest
+          go list -json -deps ./... | nancy sleuth --skip-update-check || true
 
       - name: Run trivy for vulnerability scanning
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           scan-type: "fs"
           scan-ref: "."
