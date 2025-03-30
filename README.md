@@ -15,6 +15,9 @@ A Model Context Protocol (MCP) server for generating images using Stable Diffusi
   - [API Usage](#api-usage)
     - [Generate an Image](#generate-an-image)
   - [Development](#development)
+    - [Testing](#testing)
+    - [Version Management](#version-management)
+    - [CI/CD with GitHub Actions](#cicd-with-github-actions)
   - [License](#license)
 
 
@@ -291,6 +294,50 @@ make version
 # See all available commands
 make help
 ```
+
+### Testing
+
+StableMCP includes a comprehensive suite of unit tests covering core functionality. The key areas covered by tests include:
+
+**MCP Server Implementation**
+- Server creation and initialization
+- JSON-RPC request handling
+- Capabilities registration
+- Protocol method handling
+
+**Configuration System**
+- Default configuration values
+- Loading from files
+- Environment variable integration
+- Command-line flag overrides
+- Error handling for invalid configurations
+
+**Helper Functions**
+- JSON formatting and transformation
+- Pretty printing for debugging
+
+**Types and Serialization**
+- JSON-RPC request/response marshaling
+- MCP protocol type validation
+- Error handling for serialization
+
+Run the test suite with:
+
+```bash
+# Run all tests
+go test ./...
+
+# Run tests with verbose output
+go test -v ./...
+
+# Run tests for a specific package
+go test -v ./pkg/mcp/...
+
+# Run a specific test
+go test -v ./pkg/mcp -run TestHandleRequest
+```
+
+Tests use the standard Go testing library with [stretchr/testify](https://github.com/stretchr/testify) for assertions and mocking.
 
 ### Version Management
 
