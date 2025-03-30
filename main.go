@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	fmt.Println("Starting StableMCP")
+	// Create MCPServer instance
+	// server := mcp.NewMCPServer()
+
 	rootCmd := cmd.NewRootCmd()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

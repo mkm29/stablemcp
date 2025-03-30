@@ -4,7 +4,11 @@
 BINARY_NAME=stablemcp
 BUILD_DIR=bin
 GO=$(shell command -v go)
-GOFLAGS=-ldflags="-s -w"
+VERSION=$(shell git describe --tags --always --dirty 2>/dev/null || echo "0.1.1")
+GIT_COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+GIT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS=-ldflags "-s -w -X github.com/mkm29/stablemcp/internal/version.Version=$(VERSION) -X github.com/mkm29/stablemcp/internal/version.GitCommit=$(GIT_COMMIT) -X github.com/mkm29/stablemcp/internal/version.GitBranch=$(GIT_BRANCH) -X github.com/mkm29/stablemcp/internal/version.BuildDate=$(BUILD_DATE)"
 GOLANGCI_LINT=$(shell command -v golangci-lint)
 CONFIG_PATH=configs/.stablemcp.yaml
 
@@ -15,9 +19,9 @@ all: clean lint test build
 # Build the application
 .PHONY: build
 build:
-	@echo "Building $(BINARY_NAME)..."
+	@echo "Building $(BINARY_NAME) version $(VERSION)..."
 	@mkdir -p $(BUILD_DIR)
-	@$(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) main.go
+	@$(GO) build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) main.go
 
 # Clean build artifacts
 .PHONY: clean
@@ -105,6 +109,12 @@ downloadPath: "~/Downloads"
 EOF
 	@echo "Config file created at configs/.stablemcp.yaml"
 
+# Show version information
+.PHONY: version
+version: build
+	@echo "Version information:"
+	@./$(BUILD_DIR)/$(BINARY_NAME) version
+
 # Help target
 .PHONY: help
 help:
@@ -119,4 +129,5 @@ help:
 	@echo "  fmt          - Format code"
 	@echo "  lint         - Run linter"
 	@echo "  config       - Create a default config file"
+	@echo "  version      - Show version information"
 	@echo "  help         - Show this help information"

@@ -1,0 +1,35 @@
+# Issue and PR title based labeling
+bug:
+  - '(?i)\[bug\]'
+  - '(?i)bug(\s|:)'
+  - '(?i)fix(\s|:)'
+
+enhancement:
+  - '(?i)\[feature\]'
+  - '(?i)feature(\s|:)'
+  - '(?i)enhancement(\s|:)'
+  - '(?i)add(\s|:)'
+  - '(?i)implement(\s|:)'
+
+documentation:
+  - '(?i)\[docs\]'
+  - '(?i)documentation(\s|:)'
+  - '(?i)docs(\s|:)'
+
+question:
+  - '(?i)\[question\]'
+  - '(?i)question(\s|:)'
+  - '(?i)\?'
+
+dependencies:
+  - '(?i)\[deps\]'
+  - '(?i)dependency(\s|:)'
+  - '(?i)dependencies(\s|:)'
+  - '(?i)upgrade(\s|:)'
+  - '(?i)update(\s|:).*dependency'
+
+ci:
+  - '(?i)\[ci\]'
+  - '(?i)ci(\s|:)'
+  - '(?i)github actions(\s|:)'
+  - '(?i)workflow(\s|:)'

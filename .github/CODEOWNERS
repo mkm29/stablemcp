@@ -1,0 +1,21 @@
+# These owners will be the default owners for everything in the repo
+* @mkm29
+
+# Configuration files
+/internal/config/ @mkm29
+/configs/ @mkm29
+
+# MCP implementation
+/pkg/mcp/ @mkm29
+
+# API routes
+/api/ @mkm29
+
+# CLI commands
+/cmd/ @mkm29
+
+# Docker files
+/Dockerfile @mkm29
+
+# GitHub workflows
+/.github/workflows/ @mkm29
