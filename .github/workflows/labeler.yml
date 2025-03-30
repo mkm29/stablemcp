@@ -16,7 +16,7 @@ jobs:
         enable-versioned-regex: 0
         include-title: 1
         
-    - uses: actions/labeler@v4
+    - uses: actions/labeler@v5
       if: github.event_name == 'pull_request'
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
