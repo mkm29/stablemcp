@@ -114,7 +114,7 @@ jobs:
           go build -ldflags "${LDFLAGS}" -o "bin/${BINARY_NAME}_${GOOS}_${GOARCH}" ./main.go
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: stablemcp_${{ matrix.goos }}_${{ matrix.goarch }}
           path: bin/stablemcp_${{ matrix.goos }}_${{ matrix.goarch }}*
