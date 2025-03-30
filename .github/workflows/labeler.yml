@@ -1,23 +1,38 @@
 name: "Issue & PR Labeler"
+
 on:
   issues:
     types: [opened, edited]
   pull_request:
     types: [opened, edited, synchronize]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
-  triage:
+  label-issues:
     runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
     steps:
-      - uses: github/issue-labeler@v3
+      - name: Label issues based on title and body
+        uses: github/issue-labeler@v3.2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: .github/labeler-config.yml
-          enable-versioned-regex: 0
-          include-title: 1
+          enable-versioned-regex: false
+          include-title: true
 
-      - uses: actions/labeler@v5
-        if: github.event_name == 'pull_request'
+  label-prs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Label PRs based on changed files
+        uses: actions/labeler@v4
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: .github/labeler.yml
