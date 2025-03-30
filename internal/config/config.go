@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+	
+	"github.com/spf13/viper"
+)
 
 type TLSConfig struct {
 	Enabled bool   `json:"enabled" yaml:"enabled"`
@@ -57,41 +61,19 @@ type Config struct {
 
 // NewConfig creates a new Config with default values.
 func NewConfig() *Config {
-	config := &Config{
-		Server: Server{
-			Port: 8080,
-			Host: "localhost",
-			TLS: TLSConfig{
-				Enabled: false,
-			},
-		},
-		Timeout: "30s",
-		Debug:   false,
-		Telemetry: Telemetry{
-			Metrics: MetricsConfig{
-				Enabled: false,
-			},
-			Tracing: MetricsConfig{
-				Enabled: false,
-			},
-		},
-		Logging: LoggingConfig{
-			Level:  "info",
-			Format: "json",
-		},
-		OpenAI: OpenAIConfig{
-			Model:   "gpt-3.5-turbo",
-			BaseURL: "https://api.openai.com/v1",
-		},
-		DownloadPath: "~/Downloads",
-	}
+	config := &Config{}
 	return config
 }
 
-// LoadConfig loads the configuration from a file.
+// LoadConfig loads the configuration from a file and command line flags.
 func LoadConfig(v *viper.Viper) (*Config, error) {
+	// Set config name and type
 	v.SetConfigName(".stablemcp")
 	v.SetConfigType("yaml") // Default type, will be overridden if .stablemcp.json is found
+
+	// Set environment variable prefix
+	v.SetEnvPrefix("STABLEMCP")
+	v.AutomaticEnv() // Read environment variables
 
 	// Search for config in multiple locations (in order of priority)
 	v.AddConfigPath("./configs")
@@ -122,19 +104,57 @@ func LoadConfig(v *viper.Viper) (*Config, error) {
 	v.SetDefault("logging.level", "info")
 	v.SetDefault("logging.format", "json")
 
+	// Aliases for command line flags (kebab-case) to config keys (dot notation)
+	v.RegisterAlias("log-level", "logging.level")
+	v.RegisterAlias("port", "server.port")
+	v.RegisterAlias("host", "server.host")
+
 	// Check if config file is specified via flag (highest priority)
 	if configFile := v.GetString("config"); configFile != "" {
 		v.SetConfigFile(configFile)
 	}
 
+	// Read config file - don't return error if file not found
 	if err := v.ReadInConfig(); err != nil {
-		return nil, err
+		// Only return error if it's not a "config file not found" error
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return nil, fmt.Errorf("error reading config file: %w", err)
+		}
+		// If config file not found, we'll use defaults and command line flags
 	}
 
 	// Unmarshal the config into the Config struct
 	var config Config
 	if err := v.Unmarshal(&config); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error unmarshaling config: %w", err)
+	}
+
+	// Handle specific flag-to-config mappings that couldn't be done automatically
+	// and ensure command line flags take precedence over config file
+	
+	// Log level flag handling
+	if logLevel := v.GetString("log-level"); logLevel != "" {
+		config.Logging.Level = logLevel
+	}
+	
+	// Debug flag handling
+	if v.IsSet("debug") {
+		config.Debug = v.GetBool("debug")
+	}
+	
+	// Timeout flag handling
+	if timeout := v.GetString("timeout"); timeout != "" {
+		config.Timeout = timeout
+	}
+	
+	// Server host flag handling
+	if host := v.GetString("host"); host != "" {
+		config.Server.Host = host
+	}
+	
+	// Server port flag handling
+	if v.IsSet("port") {
+		config.Server.Port = v.GetInt("port")
 	}
 
 	return &config, nil

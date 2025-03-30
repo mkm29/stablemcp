@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/mkm29/stablemcp/internal/helpers"
+	"github.com/mkm29/stablemcp/internal/version"
 )
 
 type MCPServer struct {
@@ -21,10 +22,25 @@ type MCPServer struct {
 	Encoder *json.Encoder
 }
 
-func NewMCPServer(name, version string) *MCPServer {
+// NewMCPServer creates a new MCP server with the specified name
+// and using the version from the version package
+func NewMCPServer(name string) *MCPServer {
 	return &MCPServer{
 		Name:    name,
-		Version: version,
+		Version: version.Version,
+		Capabilities: Capabilities{
+			Tools: make(map[string]any),
+		},
+		Decoder: json.NewDecoder(os.Stdin),
+		Encoder: json.NewEncoder(os.Stdout),
+	}
+}
+
+// NewMCPServerWithVersion creates a new MCP server with the specified name and version
+func NewMCPServerWithVersion(name, customVersion string) *MCPServer {
+	return &MCPServer{
+		Name:    name,
+		Version: customVersion,
 		Capabilities: Capabilities{
 			Tools: make(map[string]any),
 		},
