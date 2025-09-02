@@ -3,8 +3,8 @@ module github.com/mkm29/stablemcp
 go 1.22.5
 
 require (
-	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.6
+	github.com/spf13/cobra v1.10.1
+	github.com/spf13/pflag v1.0.9
 	github.com/spf13/viper v1.20.1
 )
 
